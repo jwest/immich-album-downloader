@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  immichalbumdownloader:
+    image: immichalbumdownloader
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+      IMMICH_HOST: ''
+      IMMICH_APIKEY: ''
+      ALBUM_ID: ''
+      ALBUM_OUTPUT_PATH: ''
+    volumes:
+      - ./test:/album:rw
