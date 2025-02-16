@@ -2,7 +2,8 @@ version: '3.4'
 
 services:
   immichalbumdownloader:
-    image: immichalbumdownloader
+    image: jwestfalewski/immich-album-downloader:1.0.0
+    platform: linux/amd64
     build:
       context: .
       dockerfile: ./Dockerfile
