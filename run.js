@@ -4,7 +4,7 @@ import axios from 'axios';
 let host = process.env.IMMICH_HOST;
 let apiKey = process.env.IMMICH_APIKEY;
 let albumId = process.env.ALBUM_ID;
-let outputAlbumPath = process.env.ALBUM_OUTPUT_PATH;
+let albumOutputPath = process.env.ALBUM_OUTPUT_PATH;
 
 async function download_image(id) {
   let config = {
@@ -39,7 +39,8 @@ axios.request(config)
 
     return response.data.assets
       .map(async image => {
-        let imagePath = `/album/${image.originalFileName}`;
+        let outputPath = albumOutputPath.replace(/\/$/, '');
+        let imagePath = `${outputPath}/${image.originalFileName}`;
 
         if (!existsSync(imagePath)) {
           console.log(` - sync photo: ${image.id} - ${image.originalFileName}`);

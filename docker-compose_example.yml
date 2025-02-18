@@ -3,10 +3,7 @@ version: '3.4'
 services:
   immichalbumdownloader:
     image: jwestfalewski/immich-album-downloader:1.0.0
-    platform: linux/amd64
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    user: 1001:1001
     environment:
       NODE_ENV: production
       IMMICH_HOST: ''
