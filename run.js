@@ -1,62 +1,39 @@
 import env from 'env-var';
-import { writeFileSync, existsSync } from 'fs';
-import axios from 'axios';
+import { CronJob } from 'cron';
+
+import ImmichClient from './immich-client.js';
+import AlbumFsClient from './album-fs-client.js';
 
 let host = env.get('IMMICH_HOST').required().asUrlString();
 let apiKey = env.get('IMMICH_APIKEY').required().asString();
 let albumId = env.get('ALBUM_ID').required().asString();
 let albumOutputPath = env.get('ALBUM_OUTPUT_PATH').required().asString();
+let cronTime = env.get('CRON_TIME').required().default('0 * * * * *').asString();
+let timeZone = env.get('TZ').required().default('Europe/London').asString();
 
-async function download_image(id) {
-  let config = {
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: `${host}/api/assets/${id}/original`,
-    headers: { 
-      'Accept': 'application/octet-stream',
-      'x-api-key': apiKey,
-    }
-  };
-  
-  return await axios.request(config)
-    .catch((error) => {
-      console.log(error);
-    });
-}
+const immichClient = new ImmichClient(host, apiKey);
+const albumFsClient = new AlbumFsClient(albumOutputPath);
 
-let config = {
-  method: 'get',
-  maxBodyLength: Infinity,
-  url: `${host}api/albums/${albumId}`,
-  headers: { 
-    'Accept': 'application/json',
-    'x-api-key': apiKey,
-  }
-};
+CronJob.from({
+	cronTime,
+	timeZone,
+	onTick: async function () {
+		const albumImages = await immichClient.getImages(albumId);
+    console.log(`Photos in album count: ${albumImages.assetCount}`);
 
-axios.request(config)
-  .then((response) => {
-    console.log(`Photos in album count: ${response.data.assetCount}`);
-
-    return response.data.assets
+    albumImages.assets
       .map(async image => {
-        let outputPath = albumOutputPath.replace(/\/$/, '');
-        let imagePath = `${outputPath}/${image.originalFileName}`;
-
-        if (!existsSync(imagePath)) {
+        let imageName = image.originalFileName;
+        if (!await albumFsClient.isImageExists(imageName)) {
           console.log(` - sync photo: ${image.id} - ${image.originalFileName}`);
-          let imageData = await download_image(image.id);
-          writeFileSync(imagePath, imageData.data);
+          let imageData = await immichClient.downloadImage(image.id);
+          await albumFsClient.saveImage(imageName, imageData);
         } else {
           console.log(` - sync photo: ${image.id} - ${image.originalFileName} - existed`);
         }
-
-        return {
-          id: image.id,
-          originalFileName: image.originalFileName,
-        }
       });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+	},
+  runOnInit: true,
+  waitForCompletion: true,
+	start: true,
+});

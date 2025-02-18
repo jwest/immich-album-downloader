@@ -7,6 +7,4 @@ COPY . .
 RUN chown -R node /usr/src/app
 USER node
 
-CMD sh -c "echo 'Inside Container:' && echo 'User: $(whoami) UID: $(id -u) GID: $(id -g)'"
-
 CMD ["npm", "start"]

@@ -6,9 +6,11 @@ services:
     user: 1001:1001
     environment:
       NODE_ENV: production
-      IMMICH_HOST: ''
-      IMMICH_APIKEY: ''
-      ALBUM_ID: ''
-      ALBUM_OUTPUT_PATH: ''
+      IMMICH_HOST: 'http://127.0.0.1:2283/'
+      IMMICH_APIKEY: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      ALBUM_ID: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+      ALBUM_OUTPUT_PATH: '/album'
+      CRON_TIME: '0 * * * * *'
+      TZ: 'Europe/Warsaw'
     volumes:
       - ./test:/album:rw

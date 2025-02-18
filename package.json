@@ -12,6 +12,7 @@
   "description": "Immich helper for auto download album photos, for example for resharing photos in users timeline and backup",
   "dependencies": {
     "axios": "^1.7.9",
+    "cron": "^3.5.0",
     "env-var": "^7.5.0"
   }
 }
