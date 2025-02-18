@@ -1,10 +1,11 @@
+import env from 'env-var';
 import { writeFileSync, existsSync } from 'fs';
 import axios from 'axios';
 
-let host = process.env.IMMICH_HOST;
-let apiKey = process.env.IMMICH_APIKEY;
-let albumId = process.env.ALBUM_ID;
-let albumOutputPath = process.env.ALBUM_OUTPUT_PATH;
+let host = env.get('IMMICH_HOST').required().asUrlString();
+let apiKey = env.get('IMMICH_APIKEY').required().asString();
+let albumId = env.get('ALBUM_ID').required().asString();
+let albumOutputPath = env.get('ALBUM_OUTPUT_PATH').required().asString();
 
 async function download_image(id) {
   let config = {
@@ -26,7 +27,7 @@ async function download_image(id) {
 let config = {
   method: 'get',
   maxBodyLength: Infinity,
-  url: `${host}/api/albums/${albumId}`,
+  url: `${host}api/albums/${albumId}`,
   headers: { 
     'Accept': 'application/json',
     'x-api-key': apiKey,
