@@ -21,5 +21,6 @@
 **/secrets.dev.yaml
 **/values.dev.yaml
 **/test
+**/.DS_Store
 LICENSE
 README.md

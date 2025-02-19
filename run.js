@@ -23,13 +23,19 @@ CronJob.from({
 
     albumImages.assets
       .map(async image => {
-        let imageName = image.originalFileName;
-        if (!await albumFsClient.isImageExists(imageName)) {
-          console.log(` - sync photo: ${image.id} - ${image.originalFileName}`);
-          let imageData = await immichClient.downloadImage(image.id);
-          await albumFsClient.saveImage(imageName, imageData);
-        } else {
-          console.log(` - sync photo: ${image.id} - ${image.originalFileName} - existed`);
+        try {
+          let imageName = image.originalFileName;
+
+          if (!await albumFsClient.isImageExists(imageName)) {
+            let imageData = await immichClient.downloadImage(image.id);
+            await albumFsClient.saveImage(imageName, imageData);
+            
+            console.log(` - sync photo: ${image.id} - ${image.originalFileName}`);
+          } else {
+            console.log(` - sync photo: ${image.id} - ${image.originalFileName} - image existed`);
+          }
+        } catch (error) {
+          console.error(error);
         }
       });
 	},

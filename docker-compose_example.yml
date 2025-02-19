@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   immichalbumdownloader:
     image: jwestfalewski/immich-album-downloader:1.0.0

@@ -2,3 +2,4 @@ node_modules
 docker-compose.yml
 test
 .vscode
+.DS_Store

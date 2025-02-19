@@ -17,10 +17,7 @@ export default class ImmichClient {
             }
           };
         
-        const response = await axios.request(config)
-          .catch((error) => {
-            console.log(error);
-          });
+        const response = await axios.request(config);
 
         return response.data;
     }
@@ -37,11 +34,8 @@ export default class ImmichClient {
           }
         };
         
-        const response = await axios.request(config)
-          .catch((error) => {
-            console.log(error);
-          });
-
+        const response = await axios.request(config);
+        
         return response.data;
       }
 }
